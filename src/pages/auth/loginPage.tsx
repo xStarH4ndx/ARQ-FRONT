@@ -1,7 +1,8 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import {
   Typography, Paper, TextField, Button, IconButton, Link, Snackbar,
-  Alert, ToggleButton, ToggleButtonGroup
+  Alert, ToggleButton, ToggleButtonGroup,
+  Box
 } from '@mui/material';
 import { AccountCircle, LockOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -59,91 +60,109 @@ export const LoginPage: React.FC = () => {
   const handleCloseSnackbar = () => setErrorMessage(null);
 
   return (
-    <Paper elevation={2} sx={{ p: 4, display: 'flex', flexDirection: 'column', width: '320px'}}>
-      <Typography variant="h4">Iniciar Sesión</Typography>
-      <Typography variant="body2" sx={{ mt: 1 }}>
-        Bienvenido, por favor selecciona tu rol e inicia sesión
-      </Typography>
-
-      <ToggleButtonGroup
-        value={role}
-        exclusive
-        onChange={handleRoleChange}
-        aria-label="Seleccionar rol"
-        sx={{ mt: 2 }}
+    <Box 
+      sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+      }}
+    >
+      <Paper 
+        elevation={2} 
+        sx={{ 
+          p: 4, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          width: '320px',
+          textAlign: 'center' 
+        }}
       >
-        <ToggleButton value="profesor">Acceder como Profesor</ToggleButton>
-        <ToggleButton value="apoderado">Acceder como Personal</ToggleButton>
-      </ToggleButtonGroup>
-
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Email"
-          name="email"
-          type="email"
-          size="small"
-          required
-          fullWidth
-          value={email}
-          onChange={handleChange}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <AccountCircle fontSize="inherit" />
-              </InputAdornment>
-            ),
-          }}
-          variant="filled"
+        <Typography variant="h4">Iniciar Sesión</Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Bienvenido, por favor selecciona tu rol e inicia sesión
+        </Typography>
+  
+        <ToggleButtonGroup
+          value={role}
+          exclusive
+          onChange={handleRoleChange}
+          aria-label="Seleccionar rol"
           sx={{ mt: 2 }}
-        />
-
-        <TextField
-          type={showPassword ? "text" : "password"}
-          name="password"
-          size="small"
-          label="Contraseña"
-          variant="filled"
-          required
-          fullWidth
-          value={password}
-          onChange={handleChange}
-          sx={{ mt: 2 }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LockOutlined fontSize="inherit" />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            ),
-          }}
-        />
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="info"
-          size="small"
-          fullWidth
-          sx={{ mt: 2 }}
-          disabled={loading}
         >
-          {loading ? "Cargando..." : "Acceder"}
-        </Button>
-      </form>
-
-      <Link href="/" variant="body2" sx={{ mt: 2 }}>
-        Olvidé mi contraseña
-      </Link>
-
-      <Snackbar open={!!errorMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
-        </Alert>
-      </Snackbar>
-    </Paper>
+          <ToggleButton value="profesor">Acceder como Profesor</ToggleButton>
+          <ToggleButton value="personal">Acceder como Personal</ToggleButton>
+        </ToggleButtonGroup>
+  
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            size="small"
+            required
+            fullWidth
+            value={email}
+            onChange={handleChange}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle fontSize="inherit" />
+                </InputAdornment>
+              ),
+            }}
+            variant="filled"
+            sx={{ mt: 2 }}
+          />
+  
+          <TextField
+            type={showPassword ? "text" : "password"}
+            name="password"
+            size="small"
+            label="Contraseña"
+            variant="filled"
+            required
+            fullWidth
+            value={password}
+            onChange={handleChange}
+            sx={{ mt: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockOutlined fontSize="inherit" />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
+          />
+  
+          <Button
+            type="submit"
+            variant="contained"
+            color="info"
+            size="small"
+            fullWidth
+            sx={{ mt: 2 }}
+            disabled={loading}
+          >
+            {loading ? "Cargando..." : "Acceder"}
+          </Button>
+        </form>
+  
+        <Link href="/" variant="body2" sx={{ mt: 2 }}>
+          Olvidé mi contraseña
+        </Link>
+  
+        <Snackbar open={!!errorMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+          <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      </Paper>
+    </Box>
   );
+  
 };

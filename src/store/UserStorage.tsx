@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 
-
 type userData = {
     role: string;
     access_token: string;
