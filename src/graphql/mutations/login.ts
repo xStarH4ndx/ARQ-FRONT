@@ -8,9 +8,9 @@ export const LOGIN_ADMIN = gql`
   }
 `
 
-export const LOGIN_PARENT = gql`
-  mutation LoginParent($email: String!, $password: String!) {
-    loginParent(email: $email, password: $password) {
+export const LOGIN_PERSONAL = gql`
+  mutation LoginPersonal($email: String!, $password: String!) {
+    loginPersonal(email: $email, password: $password) {
       access_token
     }
   }

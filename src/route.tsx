@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {RouterLayout} from "./components/common/RouterLayout";
+import { LoginPage } from "./pages/auth/loginPage";
 
 //ADMINISTRADOR------------------------
 //TEACHER------------------------
@@ -12,6 +13,7 @@ export const AppRouter: React.FC = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/login"/>}/>
       {/* Rutas sin el navbar */}
+      <Route path="/login" element={<LoginPage/>}/>
       <Route path="/" element={<RouterLayout/>}>
         {/* Rutas PROFESOR */}
         <Route path="/teacher" element={<TeacherPage/>} />

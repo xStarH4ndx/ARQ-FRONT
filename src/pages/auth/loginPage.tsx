@@ -13,7 +13,7 @@ export const LoginPage: React.FC = () => {
   const { setUserData } = useUserStore();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [role, setRole] = useState<'apoderado' | 'profesor'>('apoderado');
+  const [role, setRole] = useState<'profesor' | 'personal'>('profesor');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +25,7 @@ export const LoginPage: React.FC = () => {
     else if (name === "password") setPassword(value);
   };
 
-  const handleRoleChange = (event: React.MouseEvent<HTMLElement>, newRole: 'apoderado' | 'profesor' | null) => {
+  const handleRoleChange = (event: React.MouseEvent<HTMLElement>, newRole: 'profesor' | 'personal' | null) => {
     if (newRole) setRole(newRole);
   };
 
@@ -34,19 +34,19 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     try {
       const loginFunction =
-        role === 'apoderado'
-          ? useUsuarios.loginParent
-          : useUsuarios.loginTeacher;
+        role === 'profesor'
+          ? useUsuarios.loginTeacher
+          : useUsuarios.loginPersonal;
 
       const { access_token } = await loginFunction({ email, password });
 
       setUserData({
         access_token,
         email,
-        role: role === 'apoderado' ? 'parent' : 'teacher',
+        role: role === 'profesor' ? 'teacher' : 'personal',
       });
 
-      navigate(role === 'profesor' ? '/teacher' : '/parent');
+      navigate(role === 'personal' ? '/personal' : '/teacher');
 
     } catch (error) {
       console.error('Error en el login:', error);
@@ -59,7 +59,7 @@ export const LoginPage: React.FC = () => {
   const handleCloseSnackbar = () => setErrorMessage(null);
 
   return (
-    <Paper elevation={2} sx={{ p: 4, display: 'flex', flexDirection: 'column', width: '320px' }}>
+    <Paper elevation={2} sx={{ p: 4, display: 'flex', flexDirection: 'column', width: '320px'}}>
       <Typography variant="h4">Iniciar Sesión</Typography>
       <Typography variant="body2" sx={{ mt: 1 }}>
         Bienvenido, por favor selecciona tu rol e inicia sesión
@@ -72,8 +72,8 @@ export const LoginPage: React.FC = () => {
         aria-label="Seleccionar rol"
         sx={{ mt: 2 }}
       >
-        <ToggleButton value="apoderado">Acceder como Apoderado</ToggleButton>
         <ToggleButton value="profesor">Acceder como Profesor</ToggleButton>
+        <ToggleButton value="apoderado">Acceder como Personal</ToggleButton>
       </ToggleButtonGroup>
 
       <form onSubmit={handleSubmit}>
