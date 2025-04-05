@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client"
-import { LOGIN_ADMIN, LOGIN_PERSONAL, LOGIN_TEACHER } from "../graphql/mutations/login"
+import { LOGIN_ADMIN, LOGIN_TEACHER } from "../graphql/mutations/login"
 import { GET_USUARIOS } from "../graphql/queries/getUsers"
 import { useUserStore } from "../store/UserStorage"
 import { client } from "../api/client" // Tu configuración de ApolloClient
@@ -23,20 +23,6 @@ export const useUsuarios = {
     useUserStore.getState().setUserData({
       access_token,
       role: "admin",
-      email: data.email,
-    })
-    return { access_token }
-  },
-
-  loginPersonal: async (data: LoginData): Promise<LoginResponse> => {
-    const { data: response } = await client.mutate({
-      mutation: LOGIN_PERSONAL,
-      variables: data,
-    })
-    const access_token = response.loginParent.access_token
-    useUserStore.getState().setUserData({
-      access_token,
-      role: "parent",
       email: data.email,
     })
     return { access_token }

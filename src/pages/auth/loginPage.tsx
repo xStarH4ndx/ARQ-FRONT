@@ -14,7 +14,7 @@ export const LoginPage: React.FC = () => {
   const { setUserData } = useUserStore();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [role, setRole] = useState<'profesor' | 'personal'>('profesor');
+  const [role, setRole] = useState<'profesor' | 'admin'>('profesor');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +26,7 @@ export const LoginPage: React.FC = () => {
     else if (name === "password") setPassword(value);
   };
 
-  const handleRoleChange = (event: React.MouseEvent<HTMLElement>, newRole: 'profesor' | 'personal' | null) => {
+  const handleRoleChange = (event: React.MouseEvent<HTMLElement>, newRole: 'profesor' | 'admin' | null) => {
     if (newRole) setRole(newRole);
   };
 
@@ -37,17 +37,17 @@ export const LoginPage: React.FC = () => {
       const loginFunction =
         role === 'profesor'
           ? useUsuarios.loginTeacher
-          : useUsuarios.loginPersonal;
+          : useUsuarios.loginAdmin; // Asegúrate de tener esta función
 
       const { access_token } = await loginFunction({ email, password });
 
       setUserData({
         access_token,
         email,
-        role: role === 'profesor' ? 'teacher' : 'personal',
+        role,
       });
 
-      navigate(role === 'personal' ? '/personal' : '/teacher');
+      navigate(role === 'admin' ? '/admin' : '/teacher');
 
     } catch (error) {
       console.error('Error en el login:', error);
@@ -90,7 +90,7 @@ export const LoginPage: React.FC = () => {
           sx={{ mt: 2 }}
         >
           <ToggleButton value="profesor">Acceder como Profesor</ToggleButton>
-          <ToggleButton value="personal">Acceder como Personal</ToggleButton>
+          <ToggleButton value="admin">Acceder como Admin</ToggleButton>
         </ToggleButtonGroup>
   
         <form onSubmit={handleSubmit}>
@@ -164,5 +164,4 @@ export const LoginPage: React.FC = () => {
       </Paper>
     </Box>
   );
-  
 };
