@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}'); // Obtener usuario de localStorage
-//   const role = user?.role || ''; // Obtener rol
   const role = 'Teacher'; // Obtener rol
 
   // Opciones según el rol

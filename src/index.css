@@ -43,13 +43,13 @@ button:focus-visible {
 }
   
   
-/*Formulario para crear solicitudes*/
+/* Formulario para crear solicitudes */
 .form-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #315659;
+  align-items: center; /* Centra verticalmente */
+  height: 100%;
+  width: 100%;
   padding: 20px;
 }
 

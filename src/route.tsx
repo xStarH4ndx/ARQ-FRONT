@@ -3,7 +3,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { RouterLayout } from "./components/common/RouterLayout";
 import { LoginPage } from "./pages/auth/loginPage";
 import TeacherPage from "./pages/teacher/teacherPage";
-import SolicitudForm from "./pages/teacher/solicitudForm"; // Importar el componente del formulario
+import SolicitudForm from "./pages/teacher/solicitudForm"; 
+import SolicitudesList from "./pages/teacher/solicitudesList";
 
 export const AppRouter: React.FC = () => {
   return (
@@ -14,7 +15,8 @@ export const AppRouter: React.FC = () => {
       <Route path="/" element={<RouterLayout />}>
         {/* Rutas PROFESOR */}
         <Route path="/teacher" element={<TeacherPage />} />
-        <Route path="/crear-solicitud" element={<SolicitudForm />} /> {/* Añadir la ruta para el formulario */}
+        <Route path="/crear-solicitud" element={<SolicitudForm />} /> 
+        <Route path="/mis-solicitudes" element={<SolicitudesList />} />
         {/* <Route path="/teacher/registrarEvaluaciones/:subjectId" element={<EvaluationPage />} /> */}
         {/* <Route path="/teacher/registrarNotas/:courseId/:subjectId" element={<NotasPage />} /> */}
         
