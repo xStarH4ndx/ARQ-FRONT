@@ -4,7 +4,9 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  color: black; /* Cambié el color del texto a negro */
 }
+
 .read-the-docs {
   color: #888;
 }

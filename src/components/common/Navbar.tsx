@@ -5,13 +5,13 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}'); // Obtener usuario de localStorage
 //   const role = user?.role || ''; // Obtener rol
-  const role = 'Teacher'; // Obtener rol
+  const role = 'Admin'; // Obtener rol
 
   // Opciones según el rol
   const menuOptions = role === 'Teacher' ? [
     { label: 'Mis Solicitudes', path: '/mis-solicitudes' },
     { label: 'Crear Solicitud', path: '/crear-solicitud' }
-  ] : role === 'PersonalABS' ? [
+  ] : role === 'Admin' ? [
     { label: 'Solicitudes', path: '/solicitudes' },
     { label: 'Registro', path: '/registro' }
   ] : [];
