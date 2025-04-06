@@ -12,8 +12,8 @@ const Navbar = () => {
     { label: 'Mis Solicitudes', path: '/mis-solicitudes' },
     { label: 'Crear Solicitud', path: '/crear-solicitud' }
   ] : role === 'Admin' ? [
-    { label: 'Solicitudes', path: '/solicitudes' },
-    { label: 'Registro', path: '/registro' }
+    { label: 'Solicitudes', path: '/admin-solicitudes' },
+    { label: 'Registro', path: '/admin-inventario' }
   ] : [];
 
   const handleLogout = () => {

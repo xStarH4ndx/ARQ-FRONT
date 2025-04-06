@@ -16,19 +16,15 @@ export const AppRouter: React.FC = () => {
       {/* Rutas sin el navbar */}
       <Route path="/login" element={<LoginPage/>}/>
       <Route path="/" element={<RouterLayout/>}>
+        {/* Rutas ADMIN */}
+        <Route path="/admin-solicitudes" element={<AdminPage/>} />
         {/* Rutas PROFESOR */}
-        <Route path="/admin" element={<AdminPage/>} />
         <Route path="/teacher" element={<TeacherPage/>} />
+        
+        {/* EJEMPLOS */}
         {/* <Route path="/teacher/registrarEvaluaciones/:subjectId" element={<EvaluationPage />} /> */}
         {/* <Route path="/teacher/registrarNotas/:courseId/:subjectId" element={<NotasPage />} /> */}
         
-        {/* Rutas ADMIN */}
-        {/* <Route path="/parent/myProfile" element={<AsistenciaPage />} /> */}
-        {/* <Route path="/parent/contact" element={<TeacherPage />} /> */}
-        {/* <Route path="/parent/viewEvents" element={<TeacherPage />} /> */}
-        {/* <Route path="/parent/viewGrades" element={<TeacherPage />} /> */}
-
-
       </Route>
     </Routes>
   );
