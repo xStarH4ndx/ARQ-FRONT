@@ -7,6 +7,7 @@ import { LoginPage } from "./pages/auth/loginPage";
 import AdminPage from "./pages/admin/adminPage";
 //TEACHER------------------------
 import TeacherPage from "./pages/teacher/teacherPage";
+import LoginPageTest from "./pages/auth/loginPageTest";
 
 
 export const AppRouter: React.FC = () => {
@@ -14,7 +15,7 @@ export const AppRouter: React.FC = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/login"/>}/>
       {/* Rutas sin el navbar */}
-      <Route path="/login" element={<LoginPage/>}/>
+      <Route path="/login" element={<LoginPageTest/>}/>
       <Route path="/" element={<RouterLayout/>}>
         {/* Rutas ADMIN */}
         <Route path="/admin-solicitudes" element={<AdminPage/>} />
