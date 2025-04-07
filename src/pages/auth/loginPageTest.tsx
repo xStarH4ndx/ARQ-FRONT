@@ -9,6 +9,7 @@ const LoginPageTest: React.FC = () => {
     const body = new URLSearchParams();
     body.append("username", email); // <- el backend espera "username"
     body.append("password", password);
+    // body.append("username", email); // <- el backend espera "username"
 
     try {
       const res = await fetch("http://localhost:8080/login", {
@@ -22,6 +23,7 @@ const LoginPageTest: React.FC = () => {
 
       if (res.ok) {
         console.log("Login exitoso");
+        console.log("Respuesta del servidor:", await res.text());
         setError("");
         // Aquí puedes redirigir o mostrar algo
       } else {
