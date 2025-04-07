@@ -8,6 +8,12 @@ interface Props {
 }
 
 const DetalleSolicitud: React.FC<Props> = ({ solicitud, onClose }) => {
+  const handleConfirmar = () => {
+    //CONECTAR CON API PARA CONFIRMAR SOLICITUD
+    solicitud.estado = true;
+    console.log('Solicitud confirmada:', solicitud);
+    alert('Solicitud confirmada');
+  }
   return (
     <Paper elevation={3} sx={{ p: 3, mt: 2, maxWidth: 400}}>
       <Typography variant="h6" gutterBottom>
@@ -40,7 +46,7 @@ const DetalleSolicitud: React.FC<Props> = ({ solicitud, onClose }) => {
       </Box>
 
       <Box mt={3} display="flex" gap={2}>
-        <Button variant="contained" color="success">
+        <Button onClick={handleConfirmar} variant="contained" color="success">
           Confirmar
         </Button>
         <Button variant="outlined" color="error">

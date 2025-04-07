@@ -13,7 +13,8 @@ const Navbar = () => {
     { label: 'Crear Solicitud', path: '/crear-solicitud' }
   ] : role === 'Admin' ? [
     { label: 'Solicitudes', path: '/admin-solicitudes' },
-    { label: 'Registro', path: '/admin-inventario' }
+    { label: 'Historial', path: '/admin-historial' },
+    { label: 'Inventario', path: '/admin-inventario'}
   ] : [];
 
   const handleLogout = () => {
@@ -29,7 +30,7 @@ const Navbar = () => {
             Bienvenido, {user?.name || 'Usuario'}
           </Typography>
           {menuOptions.map((option) => (
-            <Button key={option.label} color="inherit" variant='outlined'sx={{marginRight:1.2}} onClick={() => navigate(option.path)}>
+            <Button key={option.label} color="inherit" variant='contained'sx={{marginRight:1.2}} onClick={() => navigate(option.path)}>
               {option.label}
             </Button>
           ))}
