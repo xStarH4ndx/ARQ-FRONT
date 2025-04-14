@@ -14,7 +14,7 @@ const Navbar = () => {
   ] : role === 'Admin' ? [
     { label: 'Solicitudes', path: '/admin-solicitudes' },
     { label: 'Historial', path: '/admin-historial' },
-    { label: 'Inventario', path: '/admin-inventario'}
+    { label: 'Dashboard', path: '/admin-dashboard'}
   ] : [];
 
   const handleLogout = () => {

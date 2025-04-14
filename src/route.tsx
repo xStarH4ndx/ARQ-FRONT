@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/auth/loginPage";
 
 //ADMINISTRADOR------------------------
 import AdminPage from "./pages/admin/adminPage";
+import AdminDashboard from "./pages/admin/adminDashboard";
 //TEACHER------------------------
 import TeacherPage from "./pages/teacher/teacherPage";
 import LoginPageTest from "./pages/auth/loginPageTest";
@@ -19,6 +20,7 @@ export const AppRouter: React.FC = () => {
       <Route path="/" element={<RouterLayout/>}>
         {/* Rutas ADMIN */}
         <Route path="/admin-solicitudes" element={<AdminPage/>} />
+        <Route path="/admin-dashboard" element={<AdminDashboard/>} />
         {/* Rutas PROFESOR */}
         <Route path="/teacher" element={<TeacherPage/>} />
         
