@@ -15,6 +15,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { CREAR_LABORATORIO, LISTAR_LABORATORIOS } from '../graphql/laboratorios';
 
 const LaboratorioOptions: React.FC = () => {
+  const [busqueda, setBusqueda] = useState('');
   const [nombre, setNombre] = useState('');
   const [codigo, setCodigo] = useState('');
   const [mostrarLaboratorios, setMostrarLaboratorios] = useState(false);
@@ -38,14 +39,16 @@ const LaboratorioOptions: React.FC = () => {
     }
   };
 
+  
+
   return (
-    <Paper elevation={3} sx={{ padding: 4, maxWidth: 600, margin: 'auto', marginTop: 4 }}>
+    <Paper elevation={3} sx={{ padding: 4, maxWidth: 600, margin: 'auto'}}>
       <Typography variant="h5" gutterBottom>
         Crear Nuevo Laboratorio
       </Typography>
       <form onSubmit={handleCrear}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <Grid container spacing={2} direction='row' alignItems='center'>
+          <Grid sx={{ width: '100%' }}>
             <TextField
               fullWidth
               label="Nombre"
@@ -54,7 +57,7 @@ const LaboratorioOptions: React.FC = () => {
               required
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid sx={{ width: '100%' }}>
             <TextField
               fullWidth
               label="Código"
@@ -63,8 +66,8 @@ const LaboratorioOptions: React.FC = () => {
               required
             />
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth disabled={creando}>
+          <Grid sx={{ width: '100%' }}>
+            <Button type="submit" variant="contained" color="info" fullWidth disabled={creando}>
               {creando ? 'Creando...' : 'Crear Laboratorio'}
             </Button>
           </Grid>
@@ -85,6 +88,15 @@ const LaboratorioOptions: React.FC = () => {
 
       {mostrarLaboratorios && (
         <>
+          <TextField
+            label="Buscar Laboratorio"
+            variant="standard"
+            fullWidth
+            margin='normal'
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
           {cargandoLaboratorios ? (
             <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />
           ) : errorListado ? (
@@ -93,7 +105,9 @@ const LaboratorioOptions: React.FC = () => {
             </Typography>
           ) : (
             <List>
-              {data?.listarLaboratorios?.map((lab: any) => (
+              {data?.listarLaboratorios?.filter((laboratorio: any) =>
+              `${laboratorio.nombre} ${laboratorio.codigo}`.toLowerCase().includes(busqueda.toLowerCase())  
+            ).map((lab: any) => (
                 <ListItem key={lab.id}>
                   <ListItemText
                     primary={lab.nombre}

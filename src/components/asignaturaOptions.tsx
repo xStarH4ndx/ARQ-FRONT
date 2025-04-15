@@ -15,6 +15,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { CREAR_ASIGNATURA, LISTAR_ASIGNATURAS } from '../graphql/asignaturas';
 
 const AsignaturaOptions: React.FC = () => {
+  const [busqueda, setBusqueda] = useState('');
   const [nombre, setNombre] = useState('');
   const [codigo, setCodigo] = useState('');
   const [mostrarAsignaturas, setMostrarAsignaturas] = useState(false);
@@ -39,13 +40,13 @@ const AsignaturaOptions: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 4, maxWidth: 600, margin: 'auto', marginTop: 4 }}>
+    <Paper elevation={3} sx={{ padding: 4, maxWidth: 600, margin: 'auto'}}>
       <Typography variant="h5" gutterBottom>
         Crear Nueva Asignatura
       </Typography>
       <form onSubmit={handleCrear}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <Grid container spacing={2} direction='row' alignItems='center'>
+          <Grid sx={{ width: '100%' }}>
             <TextField
               fullWidth
               label="Nombre"
@@ -54,7 +55,7 @@ const AsignaturaOptions: React.FC = () => {
               required
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid sx={{ width: '100%' }}>
             <TextField
               fullWidth
               label="Código"
@@ -63,8 +64,8 @@ const AsignaturaOptions: React.FC = () => {
               required
             />
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth disabled={creando}>
+          <Grid sx={{ width: '100%' }}>
+            <Button type="submit" variant="contained" color="info" fullWidth disabled={creando}>
               {creando ? 'Creando...' : 'Crear Asignatura'}
             </Button>
           </Grid>
@@ -76,15 +77,21 @@ const AsignaturaOptions: React.FC = () => {
           Error al crear asignatura: {errorCreacion.message}
         </Typography>
       )}
-
       <Divider sx={{ marginY: 3 }} />
-
       <Button variant="outlined" fullWidth onClick={() => setMostrarAsignaturas(!mostrarAsignaturas)}>
         {mostrarAsignaturas ? 'Ocultar Asignaturas' : 'Listar Asignaturas'}
       </Button>
 
       {mostrarAsignaturas && (
         <>
+          <TextField
+            label= "Buscar Asignatura"
+            variant="standard"
+            fullWidth
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            sx={{marginBotton: 2}}
+          />
           {cargandoAsignaturas ? (
             <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />
           ) : errorListado ? (
@@ -93,7 +100,9 @@ const AsignaturaOptions: React.FC = () => {
             </Typography>
           ) : (
             <List>
-              {data?.listarAsignaturas?.map((asignatura: any) => (
+              {data?.listarAsignaturas?.filter((asignatura: any) =>
+                `${asignatura.nombre} ${asignatura.codigo}`.toLowerCase().includes(busqueda.toLowerCase())
+              ).map((asignatura: any) => (
                 <ListItem key={asignatura.id}>
                   <ListItemText
                     primary={asignatura.nombre}
