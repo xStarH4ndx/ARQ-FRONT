@@ -15,6 +15,8 @@ export const AdminDashboard = () => {
         return <LaboratorioOptions />;
       case 'insumos':
         return <Typography variant="h6">Gestión de Insumos</Typography>;
+      case 'profesores':
+        return <Typography variant="h6">Gestión de Profesores</Typography>;
       default:
         return <Typography variant="h6">Selecciona una opción desde el menú</Typography>;
     }
