@@ -71,7 +71,7 @@ export const LoginPage: React.FC = () => {
         access_token,
       });
 
-      navigate(role === 'admin' ? '/admin' : '/teacher');
+      navigate(role === 'admin' ? '/admin-solicitudes' : '/teacher');
     } catch (error: any) {
       console.error('Error en login:', error);
       setErrorMessage(error.message || 'Error al iniciar sesión');

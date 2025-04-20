@@ -7,7 +7,7 @@ interface SidebarProps {
 
 const AdminSidebar: React.FC<SidebarProps> = ({ onSelect }) => {
   const opciones = [
-    { id: 'profesores', label: 'Gestión de Profesores' },
+    { id: 'usuarios', label: 'Gestión de Usuarios' },
     { id: 'asignaturas', label: 'Gestión de Asignaturas' },
     { id: 'laboratorios', label: 'Gestión de Laboratorio' },
     { id: 'insumos', label: 'Gestión de Insumos' },

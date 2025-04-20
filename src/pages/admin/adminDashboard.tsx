@@ -3,6 +3,8 @@ import { Grid, Box, Typography } from '@mui/material';
 import AsignaturaOptions from '../../components/asignaturaOptions';
 import LaboratorioOptions from '../../components/laboratorioOptions';
 import AdminSidebar from '../../components/adminSidebar';
+import UsuarioOptions from '../../components/usuarioOptions';
+import UsuariosTabla from '../../components/usuarioTabla';
 
 export const AdminDashboard = () => {
   const [selectedComponent, setSelectedComponent] = useState<string>('Insumos');
@@ -15,8 +17,8 @@ export const AdminDashboard = () => {
         return <LaboratorioOptions />;
       case 'insumos':
         return <Typography variant="h6">Gestión de Insumos</Typography>;
-      case 'profesores':
-        return <Typography variant="h6">Gestión de Profesores</Typography>;
+      case 'usuarios':
+        return <Grid><UsuarioOptions /><UsuariosTabla /></Grid>;
       default:
         return <Typography variant="h6">Selecciona una opción desde el menú</Typography>;
     }
