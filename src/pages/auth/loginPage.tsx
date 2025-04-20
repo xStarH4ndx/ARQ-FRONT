@@ -8,7 +8,6 @@ import { AccountCircle, LockOutlined, Visibility, VisibilityOff } from '@mui/ico
 import InputAdornment from '@mui/material/InputAdornment';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../store/UserStorage';
-import { useUsuarios } from '../../hooks/useUsuarios';
 
 export const LoginPage: React.FC = () => {
   const { setUserData } = useUserStore();
@@ -19,6 +18,7 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_LOGIN;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -26,32 +26,55 @@ export const LoginPage: React.FC = () => {
     else if (name === "password") setPassword(value);
   };
 
-  const handleRoleChange = (event: React.MouseEvent<HTMLElement>, newRole: 'profesor' | 'admin' | null) => {
+  const handleRoleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newRole: 'profesor' | 'admin' | null
+  ) => {
     if (newRole) setRole(newRole);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    try {
-      const loginFunction =
-        role === 'profesor'
-          ? useUsuarios.loginTeacher
-          : useUsuarios.loginAdmin; // Asegúrate de tener esta función
+    setErrorMessage(null);
 
-      const { access_token } = await loginFunction({ email, password });
+    const body = new URLSearchParams();
+    body.append('username', email);
+    body.append('password', password);
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Credenciales inválidas');
+      }
+
+      const data = await response.json();
+      const { access_token, username, roles } = data;
+
+      const expectedRole = role === 'admin' ? 'ROLE_Admin' : 'ROLE_Profesor';
+
+      if (!roles.includes(expectedRole)) {
+        throw new Error(
+          `No tienes permisos para acceder como ${role === 'admin' ? 'administrador' : 'profesor'}.`
+        );
+      }
 
       setUserData({
-        access_token,
-        email,
         role,
+        email: username,
+        access_token,
       });
 
       navigate(role === 'admin' ? '/admin' : '/teacher');
-
-    } catch (error) {
-      console.error('Error en el login:', error);
-      setErrorMessage('Error en el inicio de sesión. Verifica tus credenciales.');
+    } catch (error: any) {
+      console.error('Error en login:', error);
+      setErrorMessage(error.message || 'Error al iniciar sesión');
     } finally {
       setLoading(false);
     }
