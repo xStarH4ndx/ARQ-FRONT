@@ -8,7 +8,6 @@ import AdminPage from "./pages/admin/adminPage";
 import AdminDashboard from "./pages/admin/adminDashboard";
 //TEACHER------------------------
 import TeacherPage from "./pages/teacher/teacherPage";
-import LoginPageTest from "./pages/auth/loginPageTest";
 
 
 export const AppRouter: React.FC = () => {
