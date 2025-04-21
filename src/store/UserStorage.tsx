@@ -1,27 +1,37 @@
 import { create } from 'zustand';
 
 type userData = {
+  id: string;
   role: string;
   access_token: string;
   email: string;
 };
 
 interface UserState {
+  id: string;
   role: string;
   access_token: string;
   email: string;
   getAccessToken: () => string;
   getEmail: () => string;
   getRole: () => string;
+  getId: () => string;
+  setId: (id: string) => void;
   setUserData: (data: userData) => void;
   logout: () => void;
   isAdmin: () => boolean;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
+  id: '',
   role: '',
   access_token: '',
   email: '',
+
+  getId: () => {
+    const state = get();
+    return state.id;
+  },
 
   getAccessToken: () => {
     const state = get();
@@ -38,6 +48,11 @@ export const useUserStore = create<UserState>((set, get) => ({
     return state.role;
   },
 
+  setId: (id) => {
+    set({ id });
+    localStorage.setItem('id', id);
+  },
+
   setUserData: (data) => {
     set({
       role: data.role,
@@ -50,10 +65,11 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
 
   logout: () => {
-    set({ role: '', access_token: '', email: '' });
+    set({ role: '', access_token: '', email: '', id: '' });
     localStorage.removeItem('access_token');
     localStorage.removeItem('role');
     localStorage.removeItem('email');
+    localStorage.removeItem('id');
   },
 
   isAdmin: () => {

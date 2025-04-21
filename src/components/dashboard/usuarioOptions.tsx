@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREAR_USUARIO } from '../graphql/usuarios';
+import { CREAR_USUARIO } from '../../graphql/usuarios';
 import {
   TextField,
   Button,

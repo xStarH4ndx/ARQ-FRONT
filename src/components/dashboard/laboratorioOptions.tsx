@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
-import { CREAR_LABORATORIO, LISTAR_LABORATORIOS } from '../graphql/laboratorios';
+import { CREAR_LABORATORIO, LISTAR_LABORATORIOS } from '../../graphql/laboratorios';
 
 const LaboratorioOptions: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');

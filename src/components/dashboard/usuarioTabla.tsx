@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client';
-import { LISTAR_USUARIOS, ELIMINAR_USUARIO } from '../graphql/usuarios';
+import { LISTAR_USUARIOS, ELIMINAR_USUARIO } from '../../graphql/usuarios';
 import {
   Button, Typography, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Paper, Stack,

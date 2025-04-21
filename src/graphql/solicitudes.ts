@@ -28,3 +28,32 @@ export const LISTAR_SOLICITUDES = gql`
     }
   }
 `;
+
+export const SOLICITUDES_PROFESOR_QUERY = gql`
+  query SolicitudesDelProfesor($idUsuario: ID!) {
+    solicitudesDelProfesor(idUsuario: $idUsuario) {
+      id
+      fechaUso
+      horario
+      cantGrupos
+      estado
+      usuario {
+        nombre
+        apellido
+      }
+      asignatura {
+        nombre
+      }
+      laboratorio {
+        nombre
+      }
+      insumos {
+        cantidad
+        insumo {
+          nombre
+          unidadMedida
+        }
+      }
+    }
+  }
+`;

@@ -1,8 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import {
   Typography, Paper, TextField, Button, IconButton, Link, Snackbar,
-  Alert, ToggleButton, ToggleButtonGroup,
-  Box
+  Alert, ToggleButton, ToggleButtonGroup, Box
 } from '@mui/material';
 import { AccountCircle, LockOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -16,6 +15,7 @@ export const LoginPage: React.FC = () => {
   const [role, setRole] = useState<'teacher' | 'admin'>('teacher');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false); // Nuevo estado
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_LOGIN;
@@ -35,6 +35,9 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setButtonLoading(true);
+    setTimeout(() => setButtonLoading(false), 5000);
+
     setLoading(true);
     setErrorMessage(null);
 
@@ -50,23 +53,21 @@ export const LoginPage: React.FC = () => {
         credentials: 'include',
       });
 
-      if (!response.ok) {
-        throw new Error('Credenciales inválidas');
-      }
+      if (!response.ok) throw new Error('Credenciales inválidas');
 
       const data = await response.json();
       const { access_token, email, roles } = data;
       const expectedRole = role === 'admin' ? 'ROLE_Admin' : 'ROLE_Profesor';
+
       if (!roles.includes(expectedRole)) {
-        throw new Error(
-          `No tienes permisos para acceder como ${role === 'admin' ? 'administrador' : 'profesor'}.`
-        );
+        throw new Error(`No tienes permisos para acceder como ${role === 'admin' ? 'administrador' : 'profesor'}.`);
       }
 
-      setUserData({
-        role,
+      setUserData({ 
+        id: '',
+        role, 
         email: email,
-        access_token,
+        access_token 
       });
       navigate(role === 'admin' ? '/admin-solicitudes' : '/teacher');
     } catch (error: any) {
@@ -80,28 +81,22 @@ export const LoginPage: React.FC = () => {
   const handleCloseSnackbar = () => setErrorMessage(null);
 
   return (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-      }}
-    >
-      <Paper 
-        elevation={2} 
-        sx={{ 
-          p: 4, 
-          display: 'flex', 
-          flexDirection: 'column', 
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Paper
+        elevation={2}
+        sx={{
+          p: 4,
+          display: 'flex',
+          flexDirection: 'column',
           width: '320px',
-          textAlign: 'center' 
+          textAlign: 'center'
         }}
       >
         <Typography variant="h4">Iniciar Sesión</Typography>
         <Typography variant="body2" sx={{ mt: 1 }}>
           Bienvenido, por favor selecciona tu rol e inicia sesión
         </Typography>
-  
+
         <ToggleButtonGroup
           value={role}
           exclusive
@@ -112,7 +107,7 @@ export const LoginPage: React.FC = () => {
           <ToggleButton value="teacher">Acceder como Profesor</ToggleButton>
           <ToggleButton value="admin">Acceder como Admin</ToggleButton>
         </ToggleButtonGroup>
-  
+
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email"
@@ -133,7 +128,7 @@ export const LoginPage: React.FC = () => {
             variant="filled"
             sx={{ mt: 2 }}
           />
-  
+
           <TextField
             type={showPassword ? "text" : "password"}
             name="password"
@@ -158,7 +153,7 @@ export const LoginPage: React.FC = () => {
               ),
             }}
           />
-  
+
           <Button
             type="submit"
             variant="contained"
@@ -166,16 +161,16 @@ export const LoginPage: React.FC = () => {
             size="small"
             fullWidth
             sx={{ mt: 2 }}
-            disabled={loading}
+            disabled={buttonLoading}
           >
-            {loading ? "Cargando..." : "Acceder"}
+            {buttonLoading ? "Cargando..." : "Acceder"}
           </Button>
         </form>
-  
+
         <Link href="/" variant="body2" sx={{ mt: 2 }}>
           Olvidé mi contraseña
         </Link>
-  
+
         <Snackbar open={!!errorMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
             {errorMessage}

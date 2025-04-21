@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client';
-import { LISTAR_INSUMOS, ELIMINAR_INSUMO } from '../graphql/insumo';
+import { LISTAR_INSUMOS, ELIMINAR_INSUMO } from '../../graphql/insumo';
 import {
   Table,
   TableHead,

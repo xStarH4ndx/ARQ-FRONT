@@ -24,6 +24,7 @@ const UsuarioPerfil = () => {
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
 
   const usuario = data?.obtenerUsuarioPorEmail;
+  useUserStore.getState().setId(usuario?.id);
 
   if (!usuario) {
     return <Typography>No se encontró información del usuario.</Typography>;

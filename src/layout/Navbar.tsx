@@ -9,9 +9,9 @@ const Navbar = () => {
   
   // Opciones según el rol
   const menuOptions = role === 'teacher' ? [
-    { label: 'Mis Solicitudes', path: '/mis-solicitudes' },
+    { label: 'Mis Solicitudes', path: '/teacher-solicitudes' },
     { label: 'Crear Solicitud', path: '/crear-solicitud' },
-    { label: 'Mi Cuenta', path: '/teacher-account' }
+    { label: 'Mi Cuenta', path: '/teacher' }
   ] : role === 'admin' ? [
     { label: 'Solicitudes', path: '/admin-solicitudes' },
     { label: 'Historial', path: '/admin-historial' },

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import AsignaturaOptions from '../../components/asignaturaOptions';
-import LaboratorioOptions from '../../components/laboratorioOptions';
-import AdminSidebar from '../../components/adminSidebar';
-import UsuarioOptions from '../../components/usuarioOptions';
-import UsuariosTabla from '../../components/usuarioTabla';
-import CrearInsumoForm from '../../components/insumoOptions';
-import TablaInsumos from '../../components/insumoTabla';
+import AsignaturaOptions from '../../components/dashboard/asignaturaOptions';
+import LaboratorioOptions from '../../components/dashboard/laboratorioOptions';
+import AdminSidebar from '../../components/dashboard/adminSidebar';
+import UsuarioOptions from '../../components/dashboard/usuarioOptions';
+import UsuariosTabla from '../../components/dashboard/usuarioTabla';
+import CrearInsumoForm from '../../components/dashboard/insumoOptions';
+import TablaInsumos from '../../components/dashboard/insumoTabla';
 import UsuarioPerfil from '../../components/userPerfil';
 
 export const AdminDashboard = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREAR_INSUMO } from '../graphql/insumo'; // Asegúrate de definir esta mutación en tu archivo GraphQL
+import { CREAR_INSUMO } from '../../graphql/insumo'; // Asegúrate de definir esta mutación en tu archivo GraphQL
 import {
   TextField,
   Button,
