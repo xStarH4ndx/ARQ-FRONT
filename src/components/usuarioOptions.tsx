@@ -66,7 +66,7 @@ const CrearUsuarioForm = () => {
   };
 
   return (
-    <Paper elevation={4} sx={{ maxWidth: 500, mx: 'auto', mt: 5, p: 4, borderRadius: 3 }}>
+    <Paper elevation={4} sx={{ maxWidth: 500, mx: 'auto', p: 4, borderRadius: 3 }}>
       <Typography variant="h5" gutterBottom align="center">
         Crear Usuario
       </Typography>
