@@ -8,6 +8,7 @@ import AdminPage from "./pages/admin/adminPage";
 import AdminDashboard from "./pages/admin/adminDashboard";
 //TEACHER------------------------
 import TeacherPage from "./pages/teacher/teacherPage";
+import UsuarioPerfil from "./components/userPerfil";
 
 
 export const AppRouter: React.FC = () => {
@@ -22,10 +23,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/admin-dashboard" element={<AdminDashboard/>} />
         {/* Rutas PROFESOR */}
         <Route path="/teacher" element={<TeacherPage/>} />
-        
-        {/* EJEMPLOS */}
-        {/* <Route path="/teacher/registrarEvaluaciones/:subjectId" element={<EvaluationPage />} /> */}
-        {/* <Route path="/teacher/registrarNotas/:courseId/:subjectId" element={<NotasPage />} /> */}
+        <Route path="/teacher-account" element={<UsuarioPerfil/>} />
         
       </Route>
     </Routes>

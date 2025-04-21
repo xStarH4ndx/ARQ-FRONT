@@ -13,7 +13,7 @@ export const LoginPage: React.FC = () => {
   const { setUserData } = useUserStore();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [role, setRole] = useState<'profesor' | 'admin'>('profesor');
+  const [role, setRole] = useState<'teacher' | 'admin'>('teacher');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +28,7 @@ export const LoginPage: React.FC = () => {
 
   const handleRoleChange = (
     event: React.MouseEvent<HTMLElement>,
-    newRole: 'profesor' | 'admin' | null
+    newRole: 'teacher' | 'admin' | null
   ) => {
     if (newRole) setRole(newRole);
   };
@@ -55,10 +55,8 @@ export const LoginPage: React.FC = () => {
       }
 
       const data = await response.json();
-      const { access_token, username, roles } = data;
-
+      const { access_token, email, roles } = data;
       const expectedRole = role === 'admin' ? 'ROLE_Admin' : 'ROLE_Profesor';
-
       if (!roles.includes(expectedRole)) {
         throw new Error(
           `No tienes permisos para acceder como ${role === 'admin' ? 'administrador' : 'profesor'}.`
@@ -67,10 +65,9 @@ export const LoginPage: React.FC = () => {
 
       setUserData({
         role,
-        email: username,
+        email: email,
         access_token,
       });
-
       navigate(role === 'admin' ? '/admin-solicitudes' : '/teacher');
     } catch (error: any) {
       console.error('Error en login:', error);
@@ -112,7 +109,7 @@ export const LoginPage: React.FC = () => {
           aria-label="Seleccionar rol"
           sx={{ mt: 2 }}
         >
-          <ToggleButton value="profesor">Acceder como Profesor</ToggleButton>
+          <ToggleButton value="teacher">Acceder como Profesor</ToggleButton>
           <ToggleButton value="admin">Acceder como Admin</ToggleButton>
         </ToggleButtonGroup>
   

@@ -5,6 +5,9 @@ import LaboratorioOptions from '../../components/laboratorioOptions';
 import AdminSidebar from '../../components/adminSidebar';
 import UsuarioOptions from '../../components/usuarioOptions';
 import UsuariosTabla from '../../components/usuarioTabla';
+import CrearInsumoForm from '../../components/insumoOptions';
+import TablaInsumos from '../../components/insumoTabla';
+import UsuarioPerfil from '../../components/userPerfil';
 
 export const AdminDashboard = () => {
   const [selectedComponent, setSelectedComponent] = useState<string>('Insumos');
@@ -16,16 +19,18 @@ export const AdminDashboard = () => {
       case 'laboratorios':
         return <LaboratorioOptions />;
       case 'insumos':
-        return <Typography variant="h6">Gestión de Insumos</Typography>;
+        return <Grid><CrearInsumoForm/><TablaInsumos/></Grid>;
       case 'usuarios':
         return <Grid><UsuarioOptions /><UsuariosTabla /></Grid>;
+      case 'perfil':
+        return <UsuarioPerfil/>;
       default:
-        return <Typography variant="h6">Selecciona una opción desde el menú</Typography>;
+        return <UsuarioPerfil />;
     }
   };
 
   return (
-    <Grid container spacing={2} sx={{ height: 'auto', padding: 2 }}>
+    <Grid container spacing={2} sx={{ height: 'auto'}}>
       {/* Sidebar */}
       <Grid>
         <AdminSidebar onSelect={setSelectedComponent} />
@@ -33,7 +38,7 @@ export const AdminDashboard = () => {
 
       {/* Contenido */}
       <Grid>
-        <Box sx={{ padding: 2, marginLeft: 30, marginTop: 10 }}>
+        <Box sx={{ padding: 2, marginLeft: 30}}>
           {renderComponent()}
         </Box>
       </Grid>

@@ -39,3 +39,21 @@ export const LISTAR_USUARIOS = gql`
     }
   }
 `;
+
+export const OBTENER_USUARIO_POR_EMAIL = gql`
+  query ObtenerUsuarioPorEmail($email: String!) {
+    obtenerUsuarioPorEmail(email: $email) {
+      id
+      nombre
+      apellido
+      email
+      telephone
+      accountLocked
+      enabled
+      roles {
+        id
+        name
+      }
+    }
+  }
+`;

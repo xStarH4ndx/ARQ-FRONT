@@ -1,126 +1,119 @@
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { CREAR_INSUMO } from '../graphql/insumo'; // Asegúrate de definir esta mutación en tu archivo GraphQL
 import {
-  Paper,
   TextField,
   Button,
   Typography,
-  Grid,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  CircularProgress,
+  Box,
+  Paper,
 } from '@mui/material';
-import { useMutation, useQuery } from '@apollo/client';
-import { CREAR_LABORATORIO, LISTAR_LABORATORIOS } from '../graphql/laboratorios';
+import SendIcon from '@mui/icons-material/Send';
 
-const LaboratorioOptions: React.FC = () => {
-  const [busqueda, setBusqueda] = useState('');
-  const [nombre, setNombre] = useState('');
-  const [tipo, setTipo] = useState('');
-  const [dasdlkm, setMostrarLaboratorios] = useState(false);
-
-  const [crearLaboratorio, { loading: creando, error: errorCreacion }] = useMutation(CREAR_LABORATORIO, {
-    refetchQueries: [{ query: LISTAR_LABORATORIOS }],
+const CrearInsumoForm = () => {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    tipo: '',
+    unidadMedida: '',
+    stockDisponible: 0,
   });
 
-  const { data, loading: cargandoLaboratorios, error: errorListado } = useQuery(LISTAR_LABORATORIOS, {
-    skip: !mostrarLaboratorios,
-  });
+  const [crearInsumo, { loading, error }] = useMutation(CREAR_INSUMO);
 
-  const handleCrear = async (e: React.FormEvent) => {
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'cantidad' || name === 'stockDisponible' ? parseInt(value) : value,
+    }));
+  };
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const { nombre, tipo, unidadMedida, stockDisponible } = formData;
+
+    if (!nombre || !tipo || !unidadMedida || stockDisponible < 0) {
+      alert("Por favor, completa todos los campos correctamente.");
+      return;
+    }
+
     try {
-      await crearLaboratorio({ variables: { nombre, codigo } });
-      setNombre('');
-      setCodigo('');
-    } catch (err) {
-      console.error('Error al crear laboratorio:', err);
+      await crearInsumo({
+        variables: {
+          input: formData,
+        },
+      });
+      alert("¡Insumo creado con éxito!");
+    } catch (e) {
+      console.error("Error creando insumo:", e);
     }
   };
 
-  
-
   return (
-    <Paper elevation={3} sx={{ padding: 4, maxWidth: 600, margin: 'auto'}}>
-      <Typography variant="h5" gutterBottom>
-        Crear Nuevo Laboratorio
+    <Paper elevation={4} sx={{ maxWidth: 500, mx: 'auto', p: 4, borderRadius: 3 }}>
+      <Typography variant="h5" gutterBottom align="center">
+        Crear Insumo
       </Typography>
-      <form onSubmit={handleCrear}>
-        <Grid container spacing={2} direction='row' alignItems='center'>
-          <Grid sx={{ width: '100%' }}>
-            <TextField
-              fullWidth
-              label="Nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid sx={{ width: '100%' }}>
-            <TextField
-              fullWidth
-              label="Código"
-              value={codigo}
-              onChange={(e) => setCodigo(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid sx={{ width: '100%' }}>
-            <Button type="submit" variant="contained" color="info" fullWidth disabled={creando}>
-              {creando ? 'Creando...' : 'Crear Laboratorio'}
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+      <Typography variant="body2" sx={{ mt: 1 }}>
+        Completa el formulario para registrar un nuevo insumo.
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit}>
+        <TextField
+          name="nombre"
+          label="Nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          name="tipo"
+          label="Tipo"
+          value={formData.tipo}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          name="unidadMedida"
+          label="Unidad de Medida"
+          value={formData.unidadMedida}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          name="stockDisponible"
+          label="Stock Disponible"
+          type="number"
+          value={formData.stockDisponible}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          color="info"
+          sx={{ mt: 2 }}
+          disabled={loading}
+        >
+          {loading ? "Creando..." : "Crear Insumo"}
+        </Button>
 
-      {errorCreacion && (
-        <Typography color="error" sx={{ marginTop: 2 }}>
-          Error al crear laboratorio: {errorCreacion.message}
-        </Typography>
-      )}
-
-      <Divider sx={{ marginY: 3 }} />
-
-      <Button variant="outlined" fullWidth onClick={() => setMostrarLaboratorios(!mostrarLaboratorios)}>
-        {mostrarLaboratorios ? 'Ocultar Laboratorios' : 'Listar Laboratorios'}
-      </Button>
-
-      {mostrarLaboratorios && (
-        <>
-          <TextField
-            label="Buscar Laboratorio"
-            variant="standard"
-            fullWidth
-            margin='normal'
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          {cargandoLaboratorios ? (
-            <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />
-          ) : errorListado ? (
-            <Typography color="error" sx={{ marginTop: 2 }}>
-              Error al cargar laboratorios: {errorListado.message}
-            </Typography>
-          ) : (
-            <List>
-              {data?.listarLaboratorios?.filter((laboratorio: any) =>
-              `${laboratorio.nombre} ${laboratorio.codigo}`.toLowerCase().includes(busqueda.toLowerCase())  
-            ).map((lab: any) => (
-                <ListItem key={lab.id}>
-                  <ListItemText
-                    primary={lab.nombre}
-                    secondary={`Código: ${lab.codigo}`}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </>
-      )}
+        {error && (
+          <Typography color="error" mt={2}>
+            {error.message}
+          </Typography>
+        )}
+      </Box>
     </Paper>
   );
 };
 
-export default LaboratorioOptions;
+export default CrearInsumoForm;

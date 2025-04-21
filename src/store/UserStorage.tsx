@@ -12,6 +12,7 @@ interface UserState {
   email: string;
   getAccessToken: () => string;
   getEmail: () => string;
+  getRole: () => string;
   setUserData: (data: userData) => void;
   logout: () => void;
   isAdmin: () => boolean;
@@ -32,6 +33,11 @@ export const useUserStore = create<UserState>((set, get) => ({
     return state.email;
   },
 
+  getRole: () => {
+    const state = get();
+    return state.role;
+  },
+
   setUserData: (data) => {
     set({
       role: data.role,
@@ -41,7 +47,6 @@ export const useUserStore = create<UserState>((set, get) => ({
     localStorage.setItem('access_token', data.access_token);
     localStorage.setItem('role', data.role);
     localStorage.setItem('email', data.email);
-    console.log(data.access_token);
   },
 
   logout: () => {
