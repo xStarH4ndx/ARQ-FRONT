@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import AsignaturaOptions from '../../components/dashboard/asignaturaOptions';
-import LaboratorioOptions from '../../components/dashboard/laboratorioOptions';
-import AdminSidebar from '../../components/dashboard/adminSidebar';
-import UsuarioOptions from '../../components/dashboard/usuarioOptions';
-import UsuariosTabla from '../../components/dashboard/usuarioTabla';
-import CrearInsumoForm from '../../components/dashboard/insumoOptions';
-import TablaInsumos from '../../components/dashboard/insumoTabla';
-import UsuarioPerfil from '../../components/userPerfil';
+import AsignaturaOptions from '../../components/adminComponents/dashboard/asignaturaOptions';
+import LaboratorioOptions from '../../components/adminComponents/dashboard/laboratorioOptions';
+import AdminSidebar from '../../components/adminComponents/dashboard/adminSidebar';
+import UsuarioOptions from '../../components/adminComponents/dashboard/usuarioOptions';
+import UsuariosTabla from '../../components/adminComponents/dashboard/usuarioTabla';
+import CrearInsumoForm from '../../components/adminComponents/dashboard/insumoOptions';
+import TablaInsumos from '../../components/adminComponents/dashboard/insumoTabla';
+import UsuarioPerfil from '../../components/common/userPerfil';
 
 export const AdminDashboard = () => {
   const [selectedComponent, setSelectedComponent] = useState<string>('Insumos');

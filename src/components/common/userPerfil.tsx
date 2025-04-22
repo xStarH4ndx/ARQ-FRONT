@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { useUserStore } from '../store/UserStorage';
-import { OBTENER_USUARIO_POR_EMAIL } from '../graphql/usuarios';
+import { useUserStore } from '../../store/UserStorage';
+import { OBTENER_USUARIO_POR_EMAIL } from '../../graphql/usuarios';
 import {
   Paper,
   Typography,

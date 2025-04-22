@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
 } from '@mui/material';
-import { Solicitud } from '../types/';
+import { Solicitud } from '../../types';
 import { parseISO, isSameDay } from 'date-fns';
 
 interface Props {

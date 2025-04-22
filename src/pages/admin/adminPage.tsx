@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { Box, Typography, Grid, TextField, MenuItem, Select, FormControl, InputLabel, CircularProgress } from '@mui/material';
-import { LISTAR_SOLICITUDES } from '../../graphql/solicitudes';
+import { Box, Typography, Grid, TextField, MenuItem, Select, FormControl, InputLabel, CircularProgress, Button } from '@mui/material';
+import { LISTAR_SOLICITUDES_RECHAZADAS } from '../../graphql/solicitudes';
 import { Solicitud } from '../../types/index';
-import SolicitudCard from '../../components/solicitudCard';
-import DetalleSolicitud from '../../components/detalleSolicitud';
+import SolicitudCard from '../../components/adminComponents/solicitudCard';
+import DetalleSolicitud from '../../components/adminComponents/detalleSolicitud';
+import RestoreIcon from '@mui/icons-material/Restore';
 
-interface ListarSolicitudesData {
-  listarSolicitudes: Solicitud[];
+interface ListarSolicitudesRechazadasData {
+  listarSolicitudesRechazadas: Solicitud[];
 }
 
 const AdminPage: React.FC = () => {
-  const { loading, error, data } = useQuery<ListarSolicitudesData>(LISTAR_SOLICITUDES);
+  const { loading, error, data, refetch } = useQuery<ListarSolicitudesRechazadasData>(LISTAR_SOLICITUDES_RECHAZADAS);
   const [solicitudSeleccionada, setSolicitudSeleccionada] = useState<Solicitud | null>(null);
   const [filtroUrgencia, setFiltroUrgencia] = useState<string>('todos');
   const [busqueda, setBusqueda] = useState<string>('');
@@ -19,7 +20,7 @@ const AdminPage: React.FC = () => {
   if (loading) return <CircularProgress />;
   if (error) return <Typography>Error al cargar las solicitudes</Typography>;
 
-  const solicitudes = data?.listarSolicitudes || [];
+  const solicitudes = data?.listarSolicitudesRechazadas || [];
   // Filtros
   const filteredSolicitudes = solicitudes
     .filter((solicitud) => {
@@ -33,10 +34,11 @@ const AdminPage: React.FC = () => {
     .filter((solicitud) => {
       return (
         solicitud.asignatura?.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
-        solicitud.laboratorio?.nombre?.toLowerCase().includes(busqueda.toLowerCase())
+        solicitud.laboratorio?.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+        solicitud.usuario?.apellido?.toLowerCase().includes(busqueda.toLowerCase()) ||
+        solicitud.usuario?.nombre?.toLowerCase().includes(busqueda.toLowerCase())
       );
     })
-    .filter((solicitud) => solicitud.estado === false);
 
   return (
     <Box p={4}>
@@ -53,7 +55,8 @@ const AdminPage: React.FC = () => {
           onChange={(e) => setBusqueda(e.target.value)}
           fullWidth
         />
-        <FormControl variant="outlined" sx={{ minWidth: 160, marginLeft: 2 }}>
+
+        <FormControl variant="standard" sx={{minWidth: 160, marginLeft: 2 }}>
           <InputLabel>Urgencia</InputLabel>
           <Select
             value={filtroUrgencia}
@@ -65,6 +68,16 @@ const AdminPage: React.FC = () => {
             <MenuItem value="menosUrgente">Menos Urgentes</MenuItem>
           </Select>
         </FormControl>
+        {/* Botón de Actualizar */}
+        <Button
+          startIcon={<RestoreIcon />}
+          variant="contained"
+          color="info"
+          onClick={() => refetch()}  // Refresca las solicitudes
+          sx={{marginLeft: 2, minWidth: 140}}
+        >
+          Actualizar
+        </Button>
       </Box>
 
       {/* Cartas de Solicitudes */}
@@ -84,6 +97,7 @@ const AdminPage: React.FC = () => {
         <DetalleSolicitud
           solicitud={solicitudSeleccionada}
           onClose={() => setSolicitudSeleccionada(null)}
+          refetch={refetch}  // Pasar refetch aquí
         />
       )}
     </Box>

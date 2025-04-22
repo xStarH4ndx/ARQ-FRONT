@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
-import { CREAR_ASIGNATURA, LISTAR_ASIGNATURAS } from '../../graphql/asignaturas';
+import { CREAR_ASIGNATURA, LISTAR_ASIGNATURAS } from '../../../graphql/asignaturas';
 
 const AsignaturaOptions: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');

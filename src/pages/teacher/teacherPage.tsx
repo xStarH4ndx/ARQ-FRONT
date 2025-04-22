@@ -9,13 +9,15 @@ import {
   Select,
   FormControl,
   InputLabel,
-  CircularProgress
+  CircularProgress,
+  Button
 } from '@mui/material';
 import { SOLICITUDES_PROFESOR_QUERY } from '../../graphql/solicitudes';
 import { Solicitud } from '../../types/index';
 import TeacherSolicitudCard from '../../components/teacherComponents/TeachersolicitudCard';
 import TeacherDetalleSolicitud from '../../components/teacherComponents/TeacherdetalleSolicitud';
 import { useUserStore } from '../../store/UserStorage';
+import RestoreIcon from '@mui/icons-material/Restore';
 
 interface SolicitudesDelProfesorData {
   solicitudesDelProfesor: Solicitud[];
@@ -24,10 +26,12 @@ interface SolicitudesDelProfesorData {
 const TeacherPage: React.FC = () => {
   const [solicitudSeleccionada, setSolicitudSeleccionada] = useState<Solicitud | null>(null);
   const [filtroUrgencia, setFiltroUrgencia] = useState<string>('todos');
+  const [filtroEstado, setFiltroEstado] = useState<string>('todos');
+
   const [busqueda, setBusqueda] = useState<string>('');
 
   const idUsuario = useUserStore((state) => state.getId());
-  const { loading, error, data } = useQuery<SolicitudesDelProfesorData>(SOLICITUDES_PROFESOR_QUERY, {
+  const { loading, error, data, refetch} = useQuery<SolicitudesDelProfesorData>(SOLICITUDES_PROFESOR_QUERY, {
     variables: { idUsuario },
     skip: !idUsuario,
   });
@@ -44,6 +48,10 @@ const TeacherPage: React.FC = () => {
       if (filtroUrgencia === 'urgente') return isUrgente;
       if (filtroUrgencia === 'menosUrgente') return !isUrgente;
       return true;
+    })
+    .filter((solicitud) => {
+      if (filtroEstado === 'todos') return false;
+      return filtroEstado === 'true' ? solicitud.estado === true : filtroEstado === 'false' ? solicitud.estado === false : true;
     })
     .filter((solicitud) => {
       return (
@@ -67,7 +75,7 @@ const TeacherPage: React.FC = () => {
           onChange={(e) => setBusqueda(e.target.value)}
           fullWidth
         />
-        <FormControl variant="outlined" sx={{ minWidth: 160, marginLeft: 2 }}>
+        <FormControl variant="standard" sx={{ minWidth: 160, marginLeft: 2 }}>
           <InputLabel>Urgencia</InputLabel>
           <Select
             value={filtroUrgencia}
@@ -79,6 +87,29 @@ const TeacherPage: React.FC = () => {
             <MenuItem value="menosUrgente">Menos Urgentes</MenuItem>
           </Select>
         </FormControl>
+        <FormControl variant="standard" sx={{ minWidth: 160, marginLeft: 2 }}>
+          <InputLabel>Estado</InputLabel>
+          <Select
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            label="Estado"
+          >
+            <MenuItem value="Todos">Todos</MenuItem>
+            <MenuItem value="true">Aprobado</MenuItem>
+            <MenuItem value="false">Pendiente</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* Botón de Actualizar */}
+        <Button
+          startIcon={<RestoreIcon />}
+          variant="contained"
+          color="info"
+          onClick={() => refetch()}  // Refresca las solicitudes
+          sx={{marginLeft: 2, minWidth: 140}}
+        >
+          Actualizar
+        </Button>
       </Box>
 
       {/* Lista de solicitudes */}

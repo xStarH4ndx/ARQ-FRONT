@@ -10,7 +10,7 @@ const Navbar = () => {
   // Opciones según el rol
   const menuOptions = role === 'teacher' ? [
     { label: 'Mis Solicitudes', path: '/teacher-solicitudes' },
-    { label: 'Crear Solicitud', path: '/crear-solicitud' },
+    { label: 'Crear Solicitud', path: '/teacher-crearSolicitud' },
     { label: 'Mi Cuenta', path: '/teacher' }
   ] : role === 'admin' ? [
     { label: 'Solicitudes', path: '/admin-solicitudes' },
@@ -31,7 +31,7 @@ const Navbar = () => {
             Bienvenido, {email || 'Usuario'}
           </Typography>
           {menuOptions.map((option) => (
-            <Button key={option.label} color="inherit" variant='contained'sx={{marginRight:1.2}} onClick={() => navigate(option.path)}>
+            <Button key={option.label} color="inherit" variant='text'sx={{marginRight:1.2}} onClick={() => navigate(option.path)}>
               {option.label}
             </Button>
           ))}

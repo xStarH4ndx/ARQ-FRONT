@@ -1,5 +1,16 @@
-import React from 'react';
-import { Box, Typography, Chip, Button, Paper } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Box,
+  Typography,
+  Chip,
+  Button,
+  Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField
+} from '@mui/material';
 import { Solicitud } from '../../types';
 
 interface Props {
@@ -8,12 +19,17 @@ interface Props {
 }
 
 const TeacherDetalleSolicitud: React.FC<Props> = ({ solicitud, onClose }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [mensajeCancelacion, setMensajeCancelacion] = useState('');
 
-  const handleDelete = () => {
-    // Aquí deberías llamar a una mutación GraphQL para eliminar la solicitud
-    console.log('Solicitud Cancelada:', solicitud);
-    alert('Solicitud eliminada');
-  }
+  const handleEnviarCancelacion = () => {
+    // Aquí podrías enviar el mensaje al administrador vía mutación
+    console.log('Solicitud cancelada:', solicitud);
+    console.log('Motivo:', mensajeCancelacion);
+    alert('Tu solicitud de cancelación ha sido enviada al administrador.');
+    setOpenDialog(false);
+    setMensajeCancelacion('');
+  };
 
   return (
     <Paper elevation={3} sx={{ p: 3, mt: 2, maxWidth: 500 }}>
@@ -59,16 +75,56 @@ const TeacherDetalleSolicitud: React.FC<Props> = ({ solicitud, onClose }) => {
             />
           ))
         ) : (
-          <Typography variant="body2" color="text.secondary">No se solicitaron insumos</Typography>
+          <Typography variant="body2" color="text.secondary">
+            No se solicitaron insumos
+          </Typography>
         )}
       </Box>
 
       <Box mt={3} display="flex" gap={2} flexWrap="wrap">
-        <Button onClick={handleDelete} variant="outlined" color="error">
-          Cancelar Solicitud
-        </Button>
+      {solicitud.estado !== true && (
+          <Button
+            onClick={() => setOpenDialog(true)}
+            variant="outlined"
+            color="error"
+          >
+            Solicitar Cancelación
+          </Button>
+        )}
         <Button onClick={onClose}>Cerrar</Button>
       </Box>
+
+      {/* Diálogo emergente */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Solicitud de Cancelación</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Motivo de la cancelación"
+            type="text"
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            value={mensajeCancelacion}
+            onChange={(e) => setMensajeCancelacion(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="inherit">
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleEnviarCancelacion}
+            variant="contained"
+            color="warning"
+            disabled={mensajeCancelacion.trim() === ''}
+          >
+            Enviar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 };
