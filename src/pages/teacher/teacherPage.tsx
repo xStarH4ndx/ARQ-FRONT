@@ -50,7 +50,7 @@ const TeacherPage: React.FC = () => {
       return true;
     })
     .filter((solicitud) => {
-      if (filtroEstado === 'todos') return false;
+      if (filtroEstado === 'todos') return true;
       return filtroEstado === 'true' ? solicitud.estado === true : filtroEstado === 'false' ? solicitud.estado === false : true;
     })
     .filter((solicitud) => {
@@ -94,7 +94,7 @@ const TeacherPage: React.FC = () => {
             onChange={(e) => setFiltroEstado(e.target.value)}
             label="Estado"
           >
-            <MenuItem value="Todos">Todos</MenuItem>
+            <MenuItem value="todos">Todos</MenuItem>
             <MenuItem value="true">Aprobado</MenuItem>
             <MenuItem value="false">Pendiente</MenuItem>
           </Select>

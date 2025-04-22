@@ -9,6 +9,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { LISTAR_ASIGNATURAS } from '../../graphql/asignaturas'; // Consulta para listar laboratorios y asignaturas
 import { LISTAR_LABORATORIOS } from '../../graphql/laboratorios'; // Consulta para listar laboratorios y asignaturas
 import { CREAR_SOLICITUD } from '../../graphql/solicitudes'; // Mutación para crear solicitud
+import { useNavigate } from 'react-router-dom';
 
 const SolicitudForm = () => {
   const [laboratorio, setLaboratorio] = useState('');
@@ -17,7 +18,7 @@ const SolicitudForm = () => {
   const [hora, setHora] = useState('');
   const [grupo, setGrupo] = useState('');
   const [insumosSeleccionados, setInsumosSeleccionados] = useState<{ idInsumo: string; cantidad: number }[]>([]);
-
+  const navigate = useNavigate();
   const usuarioId = useUserStore.getState().getId();
 
   // Consulta para listar los laboratorios
@@ -36,7 +37,6 @@ const SolicitudForm = () => {
       cantidad: i.cantidad
     }));
     setInsumosSeleccionados(mapped);
-    console.log('Insumos seleccionados:', mapped);
   };
 
   // Función para manejar el envío de la solicitud
@@ -53,7 +53,7 @@ const SolicitudForm = () => {
         cantidad: Number(i.cantidad)
       }))
     };
-
+    if (!window.confirm('Estas seguro de enviar la solicitud?')) return;
     try {
       // Llamada a la mutación de crear solicitud
       const { data } = await crearSolicitud({
@@ -61,10 +61,10 @@ const SolicitudForm = () => {
           input: solicitudData
         }
       });
-
-      console.log('Solicitud creada con éxito:', data.crearSolicitud);
-
+      alert('Solicitud creada con éxito!');
+      navigate('/teacher-solicitudes');
     } catch (error) {
+      alert('Error al crear la solicitud. Por favor, intente nuevamente.');
       console.error('Error al crear la solicitud:', error);
     }
   };

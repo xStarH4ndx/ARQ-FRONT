@@ -56,7 +56,7 @@ const DetalleSolicitud: React.FC<Props> = ({ solicitud, onClose, refetch }) => {
       alert("Ocurrió un error al eliminar la solicitud");
     }
   };
-
+  
   return (
     <Paper elevation={3} sx={{ p: 3, mt: 2, maxWidth: 500 }}>
       <Typography variant="h6" gutterBottom>
