@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { client } from '../api/client';
 
 type userData = {
   id: string;
@@ -70,6 +71,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     localStorage.removeItem('role');
     localStorage.removeItem('email');
     localStorage.removeItem('id');
+    client.clearStore();
   },
 
   isAdmin: () => {

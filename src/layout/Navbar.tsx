@@ -19,7 +19,7 @@ const Navbar = () => {
   ] : [];
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    useUserStore.getState().logout();
     navigate('/login');
   };
 

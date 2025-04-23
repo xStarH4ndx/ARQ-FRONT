@@ -56,7 +56,7 @@ const SolicitudForm = () => {
     if (!window.confirm('Estas seguro de enviar la solicitud?')) return;
     try {
       // Llamada a la mutación de crear solicitud
-      const { data } = await crearSolicitud({
+      await crearSolicitud({
         variables: {
           input: solicitudData
         }

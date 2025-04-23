@@ -27,14 +27,14 @@ const TeacherPage: React.FC = () => {
   const [solicitudSeleccionada, setSolicitudSeleccionada] = useState<Solicitud | null>(null);
   const [filtroUrgencia, setFiltroUrgencia] = useState<string>('todos');
   const [filtroEstado, setFiltroEstado] = useState<string>('todos');
-
   const [busqueda, setBusqueda] = useState<string>('');
 
   const idUsuario = useUserStore((state) => state.getId());
-  const { loading, error, data, refetch} = useQuery<SolicitudesDelProfesorData>(SOLICITUDES_PROFESOR_QUERY, {
-    variables: { idUsuario },
-    skip: !idUsuario,
-  });
+  const { loading, error, data, refetch } = useQuery<SolicitudesDelProfesorData>(SOLICITUDES_PROFESOR_QUERY,{
+      variables: { idUsuario },
+      skip: !idUsuario,
+    }
+  );
 
   if (loading) return <CircularProgress />;
   if (error) return <Typography>Error al cargar las solicitudes del profesor</Typography>;
@@ -42,16 +42,21 @@ const TeacherPage: React.FC = () => {
 
   const filteredSolicitudes = solicitudes
     .filter((solicitud) => {
-      const fechaHoy = new Date().toISOString().split('T')[0];
-      const isUrgente = solicitud.fechaUso === fechaHoy;
+      const fechaUso = new Date(solicitud.fechaUso).toISOString().split('T')[0];
+      const hoy = new Date().toISOString().split('T')[0];
+      const isUrgente = fechaUso === hoy;
 
-      if (filtroUrgencia === 'urgente') return isUrgente;
-      if (filtroUrgencia === 'menosUrgente') return !isUrgente;
+      if (filtroUrgencia === 'urgente') return !isUrgente;
+      if (filtroUrgencia === 'menosUrgente') return isUrgente;
       return true;
     })
     .filter((solicitud) => {
       if (filtroEstado === 'todos') return true;
-      return filtroEstado === 'true' ? solicitud.estado === true : filtroEstado === 'false' ? solicitud.estado === false : true;
+      return filtroEstado === 'true'
+        ? solicitud.estado === true
+        : filtroEstado === 'false'
+        ? solicitud.estado === false
+        : true;
     })
     .filter((solicitud) => {
       return (
@@ -105,8 +110,8 @@ const TeacherPage: React.FC = () => {
           startIcon={<RestoreIcon />}
           variant="contained"
           color="info"
-          onClick={() => refetch()}  // Refresca las solicitudes
-          sx={{marginLeft: 2, minWidth: 140}}
+          onClick={() => refetch()}
+          sx={{ marginLeft: 2, minWidth: 140 }}
         >
           Actualizar
         </Button>
