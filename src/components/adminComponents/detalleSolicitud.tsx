@@ -31,7 +31,7 @@ const DetalleSolicitud: React.FC<Props> = ({ solicitud, onClose, refetch }) => {
       }
     } catch (error) {
       console.error("Error confirmando solicitud:", error);
-      alert("Ocurrió un error al confirmar la solicitud");
+      alert("Insumos insuficientes para confirmar la solicitud");
     }
   };
 

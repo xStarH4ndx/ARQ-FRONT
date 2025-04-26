@@ -17,7 +17,7 @@ const CrearUsuarioForm = () => {
     apellido: '',
     email: '',
     password: '',
-    accountLocked: true, // La cuenta siempre bloqueada
+    accountLocked: false, // La cuenta siempre habilitada
     roles: [1], // Roles seleccionados (1: Profesor por defecto)
   });
 

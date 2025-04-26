@@ -7,6 +7,7 @@ import {
   Box
 } from '@mui/material';
 import RestoreIcon from '@mui/icons-material/Restore';
+import { Role, Usuario } from '../../../types';
 
 const UsuariosTabla = () => {
   const { data, loading, error, refetch } = useQuery(LISTAR_USUARIOS);
@@ -46,21 +47,23 @@ const UsuariosTabla = () => {
                 <TableCell>Apellido</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Cuenta Activa</TableCell>
+                <TableCell>Bloqueo de Acciones</TableCell>
                 <TableCell>Roles</TableCell>
                 <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.listarUsuarios.map((usuario: any) => (
+              {data.listarUsuarios.map((usuario: Usuario) => (
                 <TableRow key={usuario.id}>
                   <TableCell>{usuario.id}</TableCell>
                   <TableCell>{usuario.nombre}</TableCell>
                   <TableCell>{usuario.apellido}</TableCell>
                   <TableCell>{usuario.email}</TableCell>
                   <TableCell>{usuario.enabled ? 'Sí' : 'No'}</TableCell>
+                  <TableCell>{usuario.accountLocked ? 'Sí' : 'No'}</TableCell>
                   <TableCell>
                     {/* Mostrar los roles */}
-                    {usuario.roles.map((role: any, index: number) => (
+                    {usuario.roles.map((role: Role, index: number) => (
                       <span key={role.id}>
                         {role.name}
                         {index < usuario.roles.length - 1 && ', '}

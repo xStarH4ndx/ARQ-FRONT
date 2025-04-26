@@ -1,3 +1,18 @@
+export interface Usuario {
+  id: string;
+  nombre: string;
+  apellido: string;
+  email: string;
+  enabled: boolean;
+  accountLocked: boolean;
+  roles: Role[];
+}
+
+export interface Role {
+  id: string;
+  name: string;
+}
+
 export interface Insumo {
   nombre: string;
   unidadMedida: string;
