@@ -1,24 +1,24 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import {
   Typography, Paper, TextField, Button, IconButton, Link, Snackbar,
-  Alert, ToggleButton, ToggleButtonGroup,
-  Box
+  Alert, ToggleButton, ToggleButtonGroup, Box
 } from '@mui/material';
 import { AccountCircle, LockOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../store/UserStorage';
-import { useUsuarios } from '../../hooks/useUsuarios';
 
 export const LoginPage: React.FC = () => {
   const { setUserData } = useUserStore();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [role, setRole] = useState<'profesor' | 'admin'>('profesor');
+  const [role, setRole] = useState<'teacher' | 'admin'>('teacher');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false); // Nuevo estado
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_LOGIN;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -26,32 +26,53 @@ export const LoginPage: React.FC = () => {
     else if (name === "password") setPassword(value);
   };
 
-  const handleRoleChange = (event: React.MouseEvent<HTMLElement>, newRole: 'profesor' | 'admin' | null) => {
+  const handleRoleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newRole: 'teacher' | 'admin' | null
+  ) => {
     if (newRole) setRole(newRole);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setButtonLoading(true);
+    setTimeout(() => setButtonLoading(false), 5000);
+
     setLoading(true);
+    setErrorMessage(null);
+
+    const body = new URLSearchParams();
+    body.append('username', email);
+    body.append('password', password);
+
     try {
-      const loginFunction =
-        role === 'profesor'
-          ? useUsuarios.loginTeacher
-          : useUsuarios.loginAdmin; // Asegúrate de tener esta función
-
-      const { access_token } = await loginFunction({ email, password });
-
-      setUserData({
-        access_token,
-        email,
-        role,
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+        credentials: 'include',
       });
 
-      navigate(role === 'admin' ? '/admin' : '/teacher');
+      if (!response.ok) throw new Error('Credenciales inválidas');
 
-    } catch (error) {
-      console.error('Error en el login:', error);
-      setErrorMessage('Error en el inicio de sesión. Verifica tus credenciales.');
+      const data = await response.json();
+      const { access_token, email, roles } = data;
+      const expectedRole = role === 'admin' ? 'ROLE_Admin' : 'ROLE_Profesor';
+
+      if (!roles.includes(expectedRole)) {
+        throw new Error(`No tienes permisos para acceder como ${role === 'admin' ? 'administrador' : 'profesor'}.`);
+      }
+
+      setUserData({ 
+        id: '',
+        role, 
+        email: email,
+        access_token 
+      });
+      navigate(role === 'admin' ? '/admin-solicitudes' : '/teacher');
+    } catch (error: any) {
+      console.error('Error en login:', error);
+      setErrorMessage(error.message || 'Error al iniciar sesión');
     } finally {
       setLoading(false);
     }
@@ -60,28 +81,22 @@ export const LoginPage: React.FC = () => {
   const handleCloseSnackbar = () => setErrorMessage(null);
 
   return (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-      }}
-    >
-      <Paper 
-        elevation={2} 
-        sx={{ 
-          p: 4, 
-          display: 'flex', 
-          flexDirection: 'column', 
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Paper
+        elevation={2}
+        sx={{
+          p: 4,
+          display: 'flex',
+          flexDirection: 'column',
           width: '320px',
-          textAlign: 'center' 
+          textAlign: 'center'
         }}
       >
         <Typography variant="h4">Iniciar Sesión</Typography>
         <Typography variant="body2" sx={{ mt: 1 }}>
           Bienvenido, por favor selecciona tu rol e inicia sesión
         </Typography>
-  
+
         <ToggleButtonGroup
           value={role}
           exclusive
@@ -89,10 +104,10 @@ export const LoginPage: React.FC = () => {
           aria-label="Seleccionar rol"
           sx={{ mt: 2 }}
         >
-          <ToggleButton value="profesor">Acceder como Profesor</ToggleButton>
+          <ToggleButton value="teacher">Acceder como Profesor</ToggleButton>
           <ToggleButton value="admin">Acceder como Admin</ToggleButton>
         </ToggleButtonGroup>
-  
+
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email"
@@ -113,7 +128,7 @@ export const LoginPage: React.FC = () => {
             variant="filled"
             sx={{ mt: 2 }}
           />
-  
+
           <TextField
             type={showPassword ? "text" : "password"}
             name="password"
@@ -138,7 +153,7 @@ export const LoginPage: React.FC = () => {
               ),
             }}
           />
-  
+
           <Button
             type="submit"
             variant="contained"
@@ -146,16 +161,16 @@ export const LoginPage: React.FC = () => {
             size="small"
             fullWidth
             sx={{ mt: 2 }}
-            disabled={loading}
+            disabled={buttonLoading}
           >
-            {loading ? "Cargando..." : "Acceder"}
+            {buttonLoading ? "Cargando..." : "Acceder"}
           </Button>
         </form>
-  
+
         <Link href="/" variant="body2" sx={{ mt: 2 }}>
           Olvidé mi contraseña
         </Link>
-  
+
         <Snackbar open={!!errorMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
             {errorMessage}

@@ -1,62 +1,81 @@
 import { create } from 'zustand';
+import { client } from '../api/client';
 
 type userData = {
-    role: string;
-    access_token: string;
-    email: string;
-}
+  id: string;
+  role: string;
+  access_token: string;
+  email: string;
+};
 
 interface UserState {
-    role: string;
-    access_token: string;
-    email: string;
-    getAccessToken: () => string;
-    getEmail: () => string;
-    setUserData: (data:userData) => void;
-    logout: () => void;
-    isAdmin: () => boolean;
+  id: string;
+  role: string;
+  access_token: string;
+  email: string;
+  getAccessToken: () => string;
+  getEmail: () => string;
+  getRole: () => string;
+  getId: () => string;
+  setId: (id: string) => void;
+  setUserData: (data: userData) => void;
+  logout: () => void;
+  isAdmin: () => boolean;
 }
 
-// Crear el store con Zustand
 export const useUserStore = create<UserState>((set, get) => ({
-    role: '',
-    access_token: '',
-    email: '',
+  id: '',
+  role: '',
+  access_token: '',
+  email: '',
 
-    // Get access token
-    getAccessToken: () => {
-        const state = get(); // Get the current state
-        return state.access_token; // Return the access_token
-    },
+  getId: () => {
+    const state = get();
+    return state.id;
+  },
 
-    // Get email
-    getEmail: () => {
-        const state = get(); // Get the current state
-        return state.email; // Return the email
-    },
+  getAccessToken: () => {
+    const state = get();
+    return state.access_token;
+  },
 
-    // Set user data (role and token)
-    setUserData: (data) => {
-        set({
-            role: data.role,
-            access_token: data.access_token, // Storing access_token
-            email: data.email
-        });
-        // Save token and role in localStorage
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('role', data.role);
-        localStorage.setItem('email', data.email);
-    },
+  getEmail: () => {
+    const state = get();
+    return state.email;
+  },
 
-    logout: () => {
-        set({ role: '', access_token: '', email: '' }); // Clear the state
-        localStorage.removeItem('access_token'); // Remove token
-        localStorage.removeItem('role');  // Remove role
-        localStorage.removeItem('email');  // Remove email
-    },
+  getRole: () => {
+    const state = get();
+    return state.role;
+  },
 
-    isAdmin: () => {
-        const state = get(); // Get the current state
-        return state.role === 'admin'; // Return true if the role is 'admin'
-    }
+  setId: (id) => {
+    set({ id });
+    localStorage.setItem('id', id);
+  },
+
+  setUserData: (data) => {
+    set({
+      role: data.role,
+      access_token: data.access_token,
+      email: data.email,
+    });
+    localStorage.setItem('access_token', data.access_token);
+    localStorage.setItem('role', data.role);
+    localStorage.setItem('email', data.email);
+  },
+
+  logout: () => {
+    set({ role: '', access_token: '', email: '', id: '' });
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('email');
+    localStorage.removeItem('id');
+    client.clearStore();
+  },
+
+  isAdmin: () => {
+    const state = get();
+    return state.role === 'admin';
+  },
 }));

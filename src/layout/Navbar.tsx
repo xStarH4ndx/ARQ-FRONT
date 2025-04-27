@@ -1,24 +1,25 @@
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../store/UserStorage';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user') || '{}'); // Obtener usuario de localStorage
-//   const role = user?.role || ''; // Obtener rol
-  const role = 'Admin'; // Obtener rol
-
+  const email= useUserStore((state) => state.getEmail());
+  const role = useUserStore((state) => state.getRole());
+  
   // Opciones según el rol
-  const menuOptions = role === 'Teacher' ? [
-    { label: 'Mis Solicitudes', path: '/mis-solicitudes' },
-    { label: 'Crear Solicitud', path: '/crear-solicitud' }
-  ] : role === 'Admin' ? [
+  const menuOptions = role === 'teacher' ? [
+    { label: 'Mis Solicitudes', path: '/teacher-solicitudes' },
+    { label: 'Crear Solicitud', path: '/teacher-crearSolicitud' },
+    { label: 'Mi Cuenta', path: '/teacher' }
+  ] : role === 'admin' ? [
     { label: 'Solicitudes', path: '/admin-solicitudes' },
     { label: 'Historial', path: '/admin-historial' },
-    { label: 'Inventario', path: '/admin-inventario'}
+    { label: 'Dashboard', path: '/admin-dashboard'}
   ] : [];
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    useUserStore.getState().logout();
     navigate('/login');
   };
 
@@ -27,10 +28,10 @@ const Navbar = () => {
       <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h6" component={"div"} sx={{ flexGrow: 1, textAlign: 'left' }}>
-            Bienvenido, {user?.name || 'Usuario'}
+            Bienvenido, {email || 'Usuario'}
           </Typography>
           {menuOptions.map((option) => (
-            <Button key={option.label} color="inherit" variant='contained'sx={{marginRight:1.2}} onClick={() => navigate(option.path)}>
+            <Button key={option.label} color="inherit" variant='text'sx={{marginRight:1.2}} onClick={() => navigate(option.path)}>
               {option.label}
             </Button>
           ))}

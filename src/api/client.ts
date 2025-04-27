@@ -1,5 +1,7 @@
 import { setContext } from '@apollo/client/link/context'
-import { createHttpLink, ApolloClient, InMemoryCache } from '@apollo/client'
+import { createHttpLink, ApolloClient, InMemoryCache, ServerError } from '@apollo/client'
+import { onError } from "@apollo/client/link/error";
+import { useUserStore } from '../store/UserStorage';
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -17,7 +19,16 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+const errorLink = onError(({ networkError }) => {
+  const status = (networkError as ServerError)?.statusCode;
+  if (status === 401) {
+    useUserStore.getState().logout();
+    alert("Ha expirado su sesión. Por favor, inicie sesión nuevamente.");
+    window.location.href = "/login";
+  }
+});
+
 export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-})
+  link: errorLink.concat(authLink.concat(httpLink)),
+  cache: new InMemoryCache()
+});

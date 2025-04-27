@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
 } from '@mui/material';
-import { Solicitud } from '../types/types';
+import { Solicitud } from '../../types';
 import { parseISO, isSameDay } from 'date-fns';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const SolicitudCard: React.FC<Props> = ({ solicitud, onVerDetalles }) => {
-  const { asignatura, profesor, fechaUso, laboratorio } = solicitud;
+  const { asignatura, usuario, fechaUso, laboratorio, estado} = solicitud;
   const fechaSolicitud = parseISO(fechaUso);
   const hoy = new Date();
   const esHoy = isSameDay(fechaSolicitud, hoy);
@@ -28,16 +28,19 @@ const SolicitudCard: React.FC<Props> = ({ solicitud, onVerDetalles }) => {
     }}>
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
-          {asignatura}
+          {asignatura.nombre}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Profesor: {profesor}
+          Profesor: {usuario.nombre} {usuario.apellido}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Laboratorio: {laboratorio}
+          Laboratorio: {laboratorio.nombre}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Fecha: {fechaUso}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Estado: {estado ? 'Aprobada' : 'Pendiente'}
         </Typography>
       </CardContent>
       <CardActions>
