@@ -6,12 +6,15 @@ const LoginPageTest: React.FC = () => {
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
+    console.log("[LOGIN] Iniciando login...");
+  
     const body = new URLSearchParams();
-    body.append("username", email); // <- el backend espera "username"
+    body.append("username", email); // ✅ Spring espera "username"
     body.append("password", password);
-    // body.append("username", email); // <- el backend espera "username"
-
+  
     try {
+      console.log("[LOGIN] Enviando request a /login...");
+  
       const res = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
@@ -20,22 +23,29 @@ const LoginPageTest: React.FC = () => {
         body: body.toString(),
         credentials: "include",
       });
-
+  
+      console.log("[LOGIN] Response recibido. Status:", res.status);
+  
       if (res.ok) {
-        console.log("Login exitoso");
-        console.log("Respuesta del servidor:", await res.text());
+        console.log("[LOGIN] Login exitoso. Procesando JSON...");
+        const tokens = await res.json();
+        console.log("[LOGIN] Tokens recibidos:", tokens);
+  
+        localStorage.setItem("access_token", tokens.access_token);
+        localStorage.setItem("refresh_token", tokens.refresh_token);
+  
         setError("");
-        // Aquí puedes redirigir o mostrar algo
       } else {
         const text = await res.text();
-        console.error("Login fallido:", text);
+        console.error("[LOGIN] Login fallido. Detalle del backend:", text);
         setError("Credenciales incorrectas");
       }
     } catch (error) {
-      console.error("Error al conectar con el servidor", error);
+      console.error("[LOGIN] Error de conexión o fetch:", error);
       setError("Error de conexión");
     }
   };
+  
 
   return (
     <div style={{ maxWidth: 300, margin: "100px auto", fontFamily: "Arial" }}>
