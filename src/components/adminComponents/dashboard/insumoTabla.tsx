@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 import {
   Table, TableHead, TableBody, TableRow, TableCell,
+  TableSortLabel, // <-- agregamos esto
   Button, Paper, Typography, Box, Stack, Dialog, DialogTitle,
-  DialogContent, DialogActions, TextField
+  DialogContent, DialogActions, TextField, Tooltip
 } from '@mui/material';
 import { useQuery, useMutation } from '@apollo/client';
 import { LISTAR_INSUMOS, ELIMINAR_INSUMO, MODIFICAR_INSUMO } from '../../../graphql/insumo';
 import RestoreIcon from '@mui/icons-material/Restore';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import ErrorIcon from '@mui/icons-material/Error';
 
 const TablaInsumos = () => {
   const { data, loading, error, refetch } = useQuery(LISTAR_INSUMOS);
   const [eliminarInsumo] = useMutation(ELIMINAR_INSUMO);
   const [modificarInsumo] = useMutation(MODIFICAR_INSUMO);
 
-  // Estado del insumo seleccionado y modal
   const [open, setOpen] = useState(false);
   const [insumoSeleccionado, setInsumoSeleccionado] = useState<any>(null);
+  const [ordenAscendente, setOrdenAscendente] = useState(true); // <-- Nuevo estado para el orden
 
   const handleEliminar = async (id: string) => {
     if (confirm('¿Estás seguro que deseas eliminar este insumo?')) {
@@ -75,8 +79,43 @@ const TablaInsumos = () => {
     }
   };
 
+  const renderEstadoStock = (stockDisponible: number) => {
+    if (stockDisponible >= 30) {
+      return (
+        <Tooltip title="Stock suficiente">
+          <CheckCircleIcon sx={{ color: 'green' }} />
+        </Tooltip>
+      );
+    } else if (stockDisponible >= 20) {
+      return (
+        <Tooltip title="Stock bajo">
+          <WarningAmberIcon sx={{ color: 'orange' }} />
+        </Tooltip>
+      );
+    } else {
+      return (
+        <Tooltip title="Stock crítico">
+          <ErrorIcon sx={{ color: 'red' }} />
+        </Tooltip>
+      );
+    }
+  };
+
+  const handleOrdenarEstadoStock = () => {
+    setOrdenAscendente(!ordenAscendente);
+  };
+
   if (loading) return <Typography>Cargando insumos...</Typography>;
   if (error) return <Typography>Error al cargar insumos: {error.message}</Typography>;
+
+  // Ordenar los insumos por stock disponible
+  const insumosOrdenados = [...data.listarInsumos].sort((a: any, b: any) => {
+    if (ordenAscendente) {
+      return a.stockDisponible - b.stockDisponible;
+    } else {
+      return b.stockDisponible - a.stockDisponible;
+    }
+  });
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -95,17 +134,29 @@ const TablaInsumos = () => {
               <TableCell>Tipo</TableCell>
               <TableCell>Unidad de Medida</TableCell>
               <TableCell>Stock Disponible</TableCell>
+              <TableCell sortDirection={ordenAscendente ? 'asc' : 'desc'}>
+                <TableSortLabel
+                  active
+                  direction={ordenAscendente ? 'asc' : 'desc'}
+                  onClick={handleOrdenarEstadoStock}
+                >
+                  Estado de Stock
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.listarInsumos?.map((insumo: any) => (
+            {insumosOrdenados.map((insumo: any) => (
               <TableRow key={insumo.id}>
                 <TableCell>{insumo.id}</TableCell>
                 <TableCell>{insumo.nombre}</TableCell>
                 <TableCell>{insumo.tipo}</TableCell>
                 <TableCell>{insumo.unidadMedida}</TableCell>
                 <TableCell>{insumo.stockDisponible}</TableCell>
+                <TableCell>
+                  {renderEstadoStock(insumo.stockDisponible)}
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"
@@ -131,7 +182,7 @@ const TablaInsumos = () => {
         </Table>
       </Paper>
 
-      {/* Dialog de modificación */}
+      {/* Modal para modificar insumo */}
       <Dialog open={open} onClose={handleCerrarModal}>
         <DialogTitle>Modificar Insumo</DialogTitle>
         <DialogContent>

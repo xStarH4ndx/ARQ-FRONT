@@ -52,7 +52,7 @@ const AdminHistorial: React.FC = () => {
   return (
     <Box p={4}>
       <Typography variant="h4" gutterBottom>
-        Solicitudes de Laboratorio
+        Historial de Aprobaciones
       </Typography>
 
       {/*  Buscador y Filtros */}
