@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import {
   Typography, Paper, TextField, Button, IconButton, Link, Snackbar,

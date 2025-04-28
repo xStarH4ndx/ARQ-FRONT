@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import AsignaturaOptions from '../../components/adminComponents/dashboard/asignaturaOptions';
 import LaboratorioOptions from '../../components/adminComponents/dashboard/laboratorioOptions';
 import AdminSidebar from '../../components/adminComponents/dashboard/adminSidebar';

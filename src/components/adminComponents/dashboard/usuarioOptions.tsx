@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREAR_USUARIO } from '../../../graphql/usuarios';
 import {
@@ -21,7 +21,7 @@ const CrearUsuarioForm = () => {
     roles: [1], // Roles seleccionados (1: Profesor por defecto)
   });
 
-  const [crearUsuario, { data, loading, error }] = useMutation(CREAR_USUARIO);
+  const [crearUsuario, { loading, error }] = useMutation(CREAR_USUARIO);
 
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREAR_INSUMO } from '../../../graphql/insumo'; // Asegúrate de definir esta mutación en tu archivo GraphQL
 import {
@@ -8,7 +8,6 @@ import {
   Box,
   Paper,
 } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
 
 const CrearInsumoForm = () => {
   const [formData, setFormData] = useState({
