@@ -12,7 +12,7 @@ interface Props {
 
 const DetalleSolicitud: React.FC<Props> = ({ solicitud, onClose, refetch }) => {
   const [eliminarSolicitud] = useMutation(ELIMINAR_SOLICITUD);
-  const [confirmarSolicitud] = useMutation(CONFIRMAR_SOLICITUD); // Cambia esto por la mutación correcta para confirmar
+  const [confirmarSolicitud] = useMutation(CONFIRMAR_SOLICITUD);
 
   const handleConfirmar = async () => {
     const confirm = window.confirm("¿Estás seguro que deseas confirmar esta solicitud?");
@@ -111,9 +111,13 @@ const DetalleSolicitud: React.FC<Props> = ({ solicitud, onClose, refetch }) => {
             Confirmar
           </Button>
         )}
-        <Button onClick={handleDelete} variant="outlined" color="error">
-          Eliminar solicitud
-        </Button>
+        <Box mt={3} display="flex" gap={2} flexWrap="wrap">
+         {solicitud.estado !== true && (
+          <Button onClick={handleDelete} variant="outlined" color="error">
+            Eliminar solicitud
+          </Button>
+         )}
+        </Box>
         <Button onClick={onClose}>Cerrar</Button>
       </Box>
     </Paper>

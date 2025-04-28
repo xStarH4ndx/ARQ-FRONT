@@ -134,6 +134,7 @@ const TeacherPage: React.FC = () => {
         <TeacherDetalleSolicitud
           solicitud={solicitudSeleccionada}
           onClose={() => setSolicitudSeleccionada(null)}
+          refetch={refetch}
         />
       )}
     </Box>

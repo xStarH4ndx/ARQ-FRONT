@@ -12,15 +12,41 @@ import {
   TextField
 } from '@mui/material';
 import { Solicitud } from '../../types';
+import { ELIMINAR_SOLICITUD } from '../../graphql/solicitudes';
+import { useMutation } from '@apollo/client';
 
 interface Props {
   solicitud: Solicitud;
   onClose: () => void;
+  refetch: () => void;
 }
 
-const TeacherDetalleSolicitud: React.FC<Props> = ({ solicitud, onClose }) => {
+const TeacherDetalleSolicitud: React.FC<Props> = ({ solicitud, onClose, refetch }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [mensajeCancelacion, setMensajeCancelacion] = useState('');
+  const [eliminarSolicitud] = useMutation(ELIMINAR_SOLICITUD);
+
+  const handleDelete = async () => {
+    const confirm = window.confirm("¿Estás seguro que deseas eliminar esta solicitud?");
+    if (!confirm) return;
+
+    try {
+      const { data } = await eliminarSolicitud({
+        variables: { idSolicitud: solicitud.id },
+      });
+
+      if (data.eliminarSolicitud) {
+        alert("Solicitud eliminada con éxito");
+        refetch();
+        onClose(); // Cierra el detalle después de eliminar
+      } else {
+        alert("No se pudo eliminar la solicitud");
+      }
+    } catch (error) {
+      console.error("Error eliminando solicitud:", error);
+      alert("Ocurrió un error al eliminar la solicitud");
+    }
+  }
 
   const handleEnviarCancelacion = () => {
     // Aquí podrías enviar el mensaje al administrador vía mutación
@@ -83,12 +109,15 @@ const TeacherDetalleSolicitud: React.FC<Props> = ({ solicitud, onClose }) => {
 
       <Box mt={3} display="flex" gap={2} flexWrap="wrap">
       {solicitud.estado !== true && (
-          <Button
-            onClick={() => setOpenDialog(true)}
-            variant="outlined"
-            color="error"
-          >
-            Solicitar Cancelación
+          // <Button
+          //   onClick={() => setOpenDialog(true)}
+          //   variant="outlined"
+          //   color="error"
+          // >
+          //   Solicitar Cancelación
+          // </Button>
+          <Button onClick={handleDelete} variant="outlined" color="error">
+            Cancelar Solicitud
           </Button>
         )}
         <Button onClick={onClose}>Cerrar</Button>
